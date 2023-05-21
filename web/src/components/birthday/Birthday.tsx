@@ -58,7 +58,7 @@ export default function Birthday() {
   return (
     <div className="flex w-1/2 flex-col">
       <label htmlFor="">Data de nascimento</label>
-      <div className="mt-2 space-x-2">
+      <div className="mt-2 inline space-x-2">
         <select
           name=""
           id=""

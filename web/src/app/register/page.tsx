@@ -1,8 +1,9 @@
 import Birthday from '@/components/birthday/Birthday'
+import Email from '@/components/email/EmailForm'
 import NavBar from '@/components/navbar/NavBar'
 import Image from 'next/image'
 
-export default function register() {
+export default function Register() {
   return (
     <main className="min-w-screen relative flex min-h-screen flex-col items-center justify-center space-y-4 bg-gray-900 bg-[url('/bg-stars.svg')]">
       <Image
@@ -24,7 +25,7 @@ export default function register() {
         <form action="" className="space-y-8 py-8">
           <div className="flex flex-col ">
             <label htmlFor="">Seu nome</label>
-            <div className="mt-2 flex flex-row">
+            <fieldset className="mt-2 flex flex-row">
               {/* fName */}
               <input
                 type="text"
@@ -42,24 +43,12 @@ export default function register() {
                 placeholder="Segundo Nome"
                 className="w-1/2 rounded-lg border border-gray-300/10 bg-gray-500/10 px-10 backdrop-blur-sm transition-colors hover:bg-gray-800"
               />
-            </div>
+            </fieldset>
           </div>
           {/* Email */}
-          <div>
-            <div className="flex flex-col">
-              <label htmlFor="">Email</label>
-            </div>
-            <input
-              type="email"
-              name=""
-              id=""
-              placeholder="Digite seu email"
-              className="mt-2 w-full rounded-lg border border-gray-300/10 bg-gray-500/10 px-10 backdrop-blur-sm transition-colors hover:bg-gray-800"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            {/* Número de contato (whatsapp) */}
+          <Email />
+          {/* Número de contato (whatsapp) */}
+          <fieldset className="flex flex-col ">
             <label htmlFor="">Número de Whatsapp</label>
             <input
               type="tel"
@@ -67,9 +56,9 @@ export default function register() {
               pattern="(\([0-9]{2}\))\s([9]{1})?([0-9]{4})-([0-9]{4})"
               className="mt-2 rounded-lg border border-gray-300/10 bg-gray-500/10 px-10 backdrop-blur-sm transition-colors hover:bg-gray-800"
             />
-          </div>
+          </fieldset>
 
-          <div className="flex flex-row">
+          <fieldset className="flex flex-row">
             <Birthday />
             <div className="flex w-1/2 flex-col">
               <label htmlFor="">Genero</label>
@@ -80,19 +69,21 @@ export default function register() {
                 className='hover:bg-gray-800" mt-2 rounded-lg border border-gray-300/10 bg-gray-500/10 px-6 backdrop-blur-sm transition-colors'
               >
                 <option value="">N/A</option>
-                <option value="">Male</option>
-                <option value="">Female</option>
+                <option value="">Masculino</option>
+                <option value="">Femenino</option>
               </select>
             </div>
-          </div>
+          </fieldset>
 
-          <button
-            type="submit"
-            className="text-md h-auto rounded-lg bg-green-800 px-10 py-2 transition-colors hover:bg-green-900"
-          >
-            {' '}
-            Enviar seus dados
-          </button>
+          <fieldset className="flex flex-row justify-end">
+            <button
+              type="submit"
+              className="text-md h-auto self-end rounded-lg bg-green-800 px-10 py-2 transition-colors hover:bg-green-900"
+            >
+              {' '}
+              Enviar seus dados
+            </button>
+          </fieldset>
         </form>
       </div>
     </main>

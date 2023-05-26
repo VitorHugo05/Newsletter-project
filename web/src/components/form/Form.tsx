@@ -1,19 +1,27 @@
 'use client'
 import Link from 'next/link'
 import { ChangeEvent, useState } from 'react'
+import { api } from '@/lib/api'
 
 export default function Form() {
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState({
+    email: ''
+  })
   const [isEmailValid, setIsEmailValid] = useState(false)
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const email = e.target.value
-    setInputValue(email)
+    setInputValue({ ...inputValue, email: email })
     setIsEmailValid(validateEmail(email))
   }
 
-  const handleCookies = () => {
-    localStorage.setItem('email', inputValue)
+  const handleCookies = async (e: any) => {
+    try {
+      const response = await api.post('/auth/register', inputValue)
+      localStorage.setItem('email', inputValue.email)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const validateEmail = (email: string) => {
@@ -39,17 +47,17 @@ export default function Form() {
             required
             className="mr-6 rounded-lg border border-gray-300/10 bg-gray-500/10 px-10 backdrop-blur-sm transition-colors hover:bg-gray-800"
             placeholder="Digite seu email"
-            value={inputValue}
+            value={inputValue.email}
             onChange={handleInputChange}
           />
           {/* eslint-disable */}
           <Link
             href="/register"
-            className={`text-md h-auto self-center rounded-lg bg-purple-700 px-10 py-2 transition-colors hover:bg-green-900 
+            className={`text-md font-mono h-auto self-center rounded-lg px-10 py-3 transition-colors hover:bg-green-800 
             
             ${!isEmailValid
-                ? 'pointer-events-none bg-purple-950 text-black/80 transition-colors'
-                : ''
+                ? 'pointer-events-none bg-red-950 text-black/80 transition-colors !duration-200'
+                : 'bg-yellow-500 text-black/80'
               }`}
             onClick={handleCookies}
           >

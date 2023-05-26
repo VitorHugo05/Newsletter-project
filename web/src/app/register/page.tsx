@@ -20,7 +20,7 @@ export default function Register() {
         alt=""
         className="absolute left-0 top-0"
       />
-      <NavBar style="bg-transparent" text="More Notices" route="/notices" />
+      <NavBar style="bg-transparent" text="Mais Notícias" route="/notices" />
       <div className="h-auto w-[40%] rounded-lg border border-gray-300/10 bg-gray-800/10 px-10 backdrop-blur-3xl">
         <form action="" className="space-y-8 py-8">
           <div className="flex flex-col ">
@@ -78,7 +78,7 @@ export default function Register() {
           <fieldset className="flex flex-row justify-end">
             <button
               type="submit"
-              className="text-md h-auto self-end rounded-lg bg-green-800 px-10 py-2 transition-colors hover:bg-green-900"
+              className="text-md h-auto self-end rounded-lg bg-green-800 px-10 py-2 font-mono transition-colors hover:bg-green-900"
             >
               {' '}
               Enviar seus dados

@@ -19,7 +19,7 @@ export default function Home() {
         alt=""
         className="absolute left-0 top-0 -z-10"
       />
-      <NavBar style="bg-transparent" text="More Notices" route="/notices" />
+      <NavBar style="bg-transparent" text="Mais Notícias" route="/notices" />
       <Form />
     </main>
   )

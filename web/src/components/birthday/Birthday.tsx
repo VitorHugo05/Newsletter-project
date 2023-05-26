@@ -3,8 +3,6 @@
 import { useState } from 'react'
 
 export default function Birthday() {
-  const [month, setMonth] = useState<String | any>('')
-
   function createDayArrays(): [number[], number[], number[], number[]] {
     const array31: number[] = Array.from(
       { length: 31 },
@@ -26,7 +24,9 @@ export default function Birthday() {
     return [array31, array30, array29, array28]
   }
 
-  const [monthWith31days, monthWith30days, monthWith29days] = createDayArrays()
+  const [monthWith31days, monthWith30days, , monthWith28days] =
+    createDayArrays()
+  const [month, setMonth] = useState<String | any>(monthWith31days)
 
   const monthsOfYear = [
     '1',
@@ -65,23 +65,23 @@ export default function Birthday() {
           className='hover:bg-gray-800" rounded-lg border border-gray-300/10 bg-gray-500/10 pl-6 pr-10 backdrop-blur-sm transition-colors'
         >
           {/* eslint-disable */}
-          {month % 2 === 0 && month !== '2'
-            ? monthWith30days.map((days, index) => {
+          {month % 2 !== 0 && month !== '2'
+            ? monthWith31days.map((days, index) => {
               return (
                 <option value={days} key={index}>
                   {days}
                 </option>
               )
             })
-            : month % 2 !== 0 && month !== '2'
-              ? monthWith31days.map((days, index) => {
+            : month % 2 === 0 && month !== '2'
+              ? monthWith30days.map((days, index) => {
                 return (
                   <option value={days} key={index}>
                     {days}
                   </option>
                 )
               })
-              : monthWith29days.map((days, index) => {
+              : monthWith28days.map((days, index) => {
                 return (
                   <option value={days} key={index}>
                     {days}

@@ -1,8 +1,7 @@
-require("dotenv").config();
-
 const express = require("express");
 const mongoose = require("mongoose")
 const cors = require("cors")
+require("dotenv").config();
 
 var corsOptions = {
   origin: function (origin, callback) {
@@ -10,35 +9,17 @@ var corsOptions = {
   },
 };
 
+const { main, register, update } = require('./src/routes')
 const app = express();
 
 app.use(express.json());
 app.use(cors(corsOptions));
 
-const User = require("./models/User")
+app.get('/', main)
 
-app.get('/', (req, res) => {
-  res.status(200).json({ msg: 'Bem-vindo a minha api' })
-})
+app.post("/auth/register", register)
 
-app.post("/auth/register", async (req, res) => {
-  const { email } = req.body
-
-  if (!email) {
-    return res.status(422).json({ msg: 'O Email e obrigatorio' })
-  }
-
-  const user = new User({
-    email,
-  })
-
-  try {
-    await user.save()
-    res.status(200).json({ msg: "Cadrasto Realizado Com Sucesso" })
-  } catch (error) {
-    console.log(error)
-  }
-})
+app.put("/auth/update", update)
 
 const dbUser = process.env.DB_USER
 const dbPassword = process.env.DB_PASS

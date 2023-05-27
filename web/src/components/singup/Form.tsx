@@ -1,33 +1,35 @@
-'use client'
-import Link from 'next/link'
-import { ChangeEvent, useState } from 'react'
-import { api } from '@/lib/api'
+"use client";
+import Link from "next/link";
+import { ChangeEvent, useState } from "react";
+import { api } from "@/lib/api";
 
 export default function Form() {
   const [inputValue, setInputValue] = useState({
-    email: ''
-  })
-  const [isEmailValid, setIsEmailValid] = useState(false)
+    email: "",
+  });
+  const [isEmailValid, setIsEmailValid] = useState(false);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const email = e.target.value
-    setInputValue({ ...inputValue, email: email })
-    setIsEmailValid(validateEmail(email))
-  }
+    const email = e.target.value;
+    setInputValue({ ...inputValue, email: email });
+    setIsEmailValid(validateEmail(email));
+  };
 
-  const handleCookies = async (e: any) => {
+  const handleCookies = async () => {
+    const token = self.crypto.randomUUID();
+    const email = inputValue.email;
     try {
-      const response = await api.post('/auth/register', inputValue)
-      localStorage.setItem('email', inputValue.email)
+      const response = await api.post("/auth/register", { email, token });
+      localStorage.setItem("token", token);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const validateEmail = (email: string) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return regex.test(email)
-  }
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
 
   return (
     <>
@@ -53,12 +55,13 @@ export default function Form() {
           {/* eslint-disable */}
           <Link
             href="/register"
-            className={`text-md font-mono h-auto self-center rounded-lg px-10 py-3 transition-colors hover:bg-green-800 
+            className={`text-md h-auto self-center rounded-lg px-10 py-3 font-mono transition-colors hover:bg-green-800 
             
-            ${!isEmailValid
-                ? 'pointer-events-none bg-red-950 text-black/80 transition-colors !duration-200'
-                : 'bg-yellow-500 text-black/80'
-              }`}
+            ${
+              !isEmailValid
+                ? "pointer-events-none bg-red-950 text-black/80 transition-colors !duration-200"
+                : "bg-yellow-500 text-black/80"
+            }`}
             onClick={handleCookies}
           >
             Inscreva-se
@@ -67,5 +70,5 @@ export default function Form() {
         </form>
       </div>
     </>
-  )
+  );
 }

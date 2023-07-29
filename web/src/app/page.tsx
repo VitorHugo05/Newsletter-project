@@ -1,5 +1,5 @@
-import Form from "@/components/singup/Form";
-import NavBar from "@/components/navbar/NavBar";
+import Form from "@/components/singup";
+import NavBar from "@/components/nav/navBar";
 import Image from "next/image";
 
 export default function Home() {

@@ -1,7 +1,8 @@
 "use client";
-import Link from "next/link";
 import { ChangeEvent, useState } from "react";
 import { api } from "@/lib/api";
+import Link from "next/link";
+import { setCookie } from "cookies-next";
 
 export default function Form() {
   const [inputValue, setInputValue] = useState({
@@ -9,27 +10,28 @@ export default function Form() {
   });
   const [isEmailValid, setIsEmailValid] = useState(false);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     const email = e.target.value;
     setInputValue({ ...inputValue, email: email });
     setIsEmailValid(validateEmail(email));
-  };
+  }
 
-  const handleCookies = async () => {
+  async function handleCookies() {
     const token = self.crypto.randomUUID();
     const email = inputValue.email;
+    setCookie("token", token);
+    setCookie("email", email);
     try {
       const response = await api.post("/auth/register", { email, token });
-      localStorage.setItem("token", token);
     } catch (error) {
       console.log(error);
     }
-  };
+  }
 
-  const validateEmail = (email: string) => {
+  function validateEmail(email: string) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
-  };
+  }
 
   return (
     <>

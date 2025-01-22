@@ -1,132 +1,75 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { setCookie } from "cookies-next";
+import { useFormHandlers } from "@/hooks/formHandlers";
 import NavBar from "@/components/nav/navBar";
-import { data } from "autoprefixer";
+import { UserLoggedOut } from "@/components/nav/user";
+import RegisterForm from "@/components/registerForm";
 import Image from "next/image";
 import Link from "next/link";
-import { ChangeEvent, use, useState } from "react";
+import api from "@/api";
 
 export default function Register() {
-  const [isFormValid, setFormValid] = useState(false);
-  const [data, setData] = useState({
-    fPass: "",
-    sPass: "",
-    email: "",
-  });
+    const router = useRouter();
+    const { data, setData, emailError, validateForm, validateEmail } = useFormHandlers({
+        name: "",
+        fPass: "",
+        sPass: "",
+        email: "",
+        birthDate: "",
+        username: "",
+    });
 
-  const handleData = {
-    handleFPassword(e: ChangeEvent<HTMLInputElement>) {
-      const fPass = e.target.value;
-      setData({ ...data, fPass });
-      setFormValid(
-        data.fPass !== "" &&
-          data.sPass !== "" &&
-          data.email !== "" &&
-          data.fPass === data.sPass
-          ? true
-          : false
-      );
-    },
-    handleSPassword(e: ChangeEvent<HTMLInputElement>) {
-      const sPass = e.target.value;
-      setData({ ...data, sPass });
-      setFormValid(
-        data.fPass !== "" &&
-          data.sPass !== "" &&
-          data.email !== "" &&
-          data.fPass === data.sPass
-          ? true
-          : false
-      );
-    },
-    handleEmail(e: ChangeEvent<HTMLInputElement>) {
-      const email = e.target.value;
-      setData({ ...data, email });
-      setFormValid(
-        data.fPass !== "" &&
-          data.sPass !== "" &&
-          data.email !== "" &&
-          data.fPass === data.sPass
-          ? true
-          : false
-      );
-    },
-  };
+    const register = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (emailError) return alert("Por favor, corrija o erro de e-mail.");
 
-  return (
-    <main className=" min-w-screen relative flex min-h-screen flex-col items-center justify-center space-y-4 bg-gray-900 bg-[url('/bg-stars.svg')]">
-      <Image
-        src={"/color-sharp2.png"}
-        width={560}
-        height={300}
-        alt=""
-        className="absolute bottom-0 right-0"
-      />
-      <Image
-        src={"/color-sharp.png"}
-        width={560}
-        height={300}
-        alt=""
-        className="absolute left-0 top-0"
-      />
-      <NavBar style="bg-transparent" text="Mais Notícias" route="/notices" />
-      <div className="flex h-auto w-[30%] flex-col gap-8 rounded-lg border border-gray-300/10 bg-gray-800/10 p-10 backdrop-blur-3xl">
-        <h1 className="mb-6 text-center font-body text-xl font-bold">
-          Registre-se
-        </h1>
-        <div>
-          <form className="flex flex-col gap-8">
-            <fieldset className="flex flex-col gap-2">
-              <h2>Digite seu email</h2>
-              <input
-                type="email"
-                className="h-auto w-full rounded-lg border border-gray-600 bg-gray-900/95"
-                placeholder="Email"
-                value={data.email}
-                onChange={handleData.handleEmail}
-              />
-            </fieldset>
-            <fieldset className="flex flex-col gap-2">
-              <h2 className="text-md">Digite sua senha</h2>
-              <input
-                type="password"
-                className="h-auto w-full rounded-lg border border-gray-600 bg-gray-900/95"
-                placeholder="Senha"
-                value={data.fPass}
-                onChange={handleData.handleFPassword}
-              />
-            </fieldset>
-            <fieldset className="flex flex-col gap-2">
-              <h2 className="text-md">Digite novamente sua senha</h2>
-              <input
-                type="password"
-                className="h-auto w-full rounded-lg border border-gray-600 bg-gray-900/95"
-                placeholder="Senha"
-                value={data.sPass}
-                onChange={handleData.handleSPassword}
-              />
-            </fieldset>
-            <button
-              type="submit"
-              className={`text-md h-auto self-end rounded-lg  px-10 py-3 font-mono  transition-colors hover:bg-green-800 ${
-                !isFormValid
-                  ? "pointer-events-none bg-red-950 text-black/80 transition-colors !duration-200"
-                  : "bg-yellow-500 text-black/80"
-              }`}
-            >
-              Logue agora
-            </button>
-          </form>
-        </div>
-        <h2 className="text-center">
-          <Link
-            href="/auth/login"
-            className="text-lg transition-colors hover:cursor-pointer hover:border-b hover:border-gray-200 hover:text-gray-200"
-          >
-            Já tem uma conta? Logue nela!
-          </Link>
-        </h2>
-      </div>
-    </main>
-  );
+        const req = {
+            name: data.name,
+            email: data.email,
+            password: data.sPass,
+            birthdate: new Date(data.birthDate).toLocaleDateString("pt-BR"),
+            username: data.username
+        };
+
+        try {
+            const res = await api.post("/auth/register", req);
+            setCookie("token", res.data.token);
+            router.push("/notices");
+        } catch (err) {
+            console.error("Erro ao registrar:", err);
+        }
+    };
+
+    return (
+        <main className="min-w-screen flex min-h-screen flex-col items-center justify-center bg-gray-900 bg-[url('/bg-stars.svg')]">
+            <Image src="/color-sharp2.png" width={560} height={300} alt="" className="absolute bottom-0 right-0" />
+            <Image src="/color-sharp.png" width={560} height={300} alt="" className="absolute left-0 top-0" />
+            <NavBar
+                style="bg-transparent"
+                leftContent={<UserLoggedOut />}
+                rightContent={
+                    <Link href="/notices" className="flex items-center gap-2 text-lg hover:text-gray-200">
+                        Ir para as postagens
+                    </Link>
+                }
+            />
+            <div className="w-[30%] rounded-lg border border-gray-300/10 bg-gray-800/10 p-10 backdrop-blur-3xl">
+                <h1 className="mb-6 text-center font-body text-xl font-bold">Registre-se</h1>
+                <RegisterForm
+                    data={data}
+                    setData={setData}
+                    emailError={emailError}
+                    isFormValid={validateForm()}
+                    register={register}
+                />
+                <h2 className="text-center">
+                    <Link href="/auth/login" className="text-lg hover:border-b hover:border-gray-200 hover:text-gray-200">
+                        Já tem uma conta? Logue nela!
+                    </Link>
+                </h2>
+            </div>
+        </main>
+    );
 }

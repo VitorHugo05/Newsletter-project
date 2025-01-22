@@ -1,6 +1,5 @@
 "use client";
 import { ChangeEvent, useState } from "react";
-import { api } from "@/lib/api";
 import Link from "next/link";
 import { setCookie } from "cookies-next";
 
@@ -8,6 +7,7 @@ export default function Form() {
   const [inputValue, setInputValue] = useState({
     email: "",
   });
+  
   const [isEmailValid, setIsEmailValid] = useState(false);
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
@@ -17,15 +17,8 @@ export default function Form() {
   }
 
   async function handleCookies() {
-    const token = self.crypto.randomUUID();
     const email = inputValue.email;
-    setCookie("token", token);
     setCookie("email", email);
-    try {
-      const response = await api.post("/auth/register", { email, token });
-    } catch (error) {
-      console.log(error);
-    }
   }
 
   function validateEmail(email: string) {
@@ -56,7 +49,7 @@ export default function Form() {
           />
           {/* eslint-disable */}
           <Link
-            href="/register"
+            href="/auth/register"
             className={`text-md h-auto self-center rounded-lg px-10 py-3 font-mono transition-colors hover:bg-green-800 
             
             ${
